@@ -1,0 +1,17 @@
+список доработок
+1. настроить темы
+2. настройть значения настроек по умолчанию.
+3. разработать для фильтра crud - выборка, удаление, добавление и обновление
+
+исправить - один check категории должен быть выбран
+spinner скорректировать по макету - цвет / оформление единое
+
+links
+
+ListView
+http://developer.alexanderklimov.ru/android/views/listview.php
+
+
+LiveData
+https://habr.com/ru/post/468749/
+https://habr.com/ru/post/456256/

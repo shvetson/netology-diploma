@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.recipe_view.TabDetailsFragment">
+
+    <ListView
+        android:id="@+id/list_view_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="2dp"
+        android:divider="@color/secondaryDarkColor"
+        android:layout_margin="@dimen/recycler_margin"
+        tools:listitem="@layout/item_step"/>
+
+</FrameLayout>

@@ -1,0 +1,98 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+
+//    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
+    id 'androidx.navigation.safeargs.kotlin'
+
+    //  Для работы с @Parcelize (одна из двух)
+//    id 'kotlin-android-extensions'
+    id 'kotlin-parcelize'
+
+    // Для работы с Room
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "ru.shvets.myapplication"
+        minSdk 26
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        // specify directory for storing databases schemas
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.appcompat:appcompat:1.5.0"
+    implementation "com.google.android.material:material:1.6.1"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+
+//    implementation(project(":utils"))
+
+    implementation "androidx.activity:activity-ktx:1.5.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.2"
+
+    // Serialization
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    // Navigation
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.1"
+
+    // ViewPager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    // Room
+    implementation "androidx.room:room-runtime:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3" // optional - Coroutines & Flows support
+
+    // Faker
+    // implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    // SwipeDecorator to RecyclerView
+    // implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
+     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
+
+    // LifeCycle
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+}

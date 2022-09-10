@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Book recipes</string>
+
+    <!-- Messages -->
+    <string name="search_message">Enter a search text</string>
+    <string name="question_delete">Are you sure you want to delete the step?</string>
+    <string name="error_empty">Value is empty</string>
+    <string name="recipe_is_deleted">is deleted</string>
+
+    <!-- Swipe -->
+    <string name="swipe_edit">Edit</string>
+    <string name="swipe_delete">Delete</string>
+
+    <!-- Screen's title -->
+    <string name="title_list">Recipes list</string>
+    <string name="title_favorites_list">Favorites list</string>
+    <string name="title_recipe">Recipe</string>
+    <string name="title_details">Details</string>
+    <string name="title_add">New recipe</string>
+    <string name="title_edit_recipe">Edit recipe</string>
+    <string name="title_edit_step">Edit step</string>
+    <string name="title_favorite">Favorites</string>
+    <string name="title_filter">Filter</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_message_question">Question</string>
+    <string name="title_message_enter_step">Enter step</string>
+
+    <!-- Button's label -->
+    <string name="btn_label_update">Update</string>
+    <string name="btn_label_save">Save</string>
+    <string name="btn_label_delete">Delete</string>
+    <string name="btn_label_cancel">Cancel</string>
+    <string name="btn_label_add">Add</string>
+    <string name="btn_label_confirm">Confirm</string>
+
+    <!-- Toolbar menu -->
+    <string name="toolbar_menu_action_search">Search</string>
+    <string name="toolbar_menu_action_filter">Filter</string>
+
+    <!-- Bottom menu -->
+    <string name="bottom_menu_action_recipes">List recipes</string>
+    <string name="bottom_menu_action_favorite">Favorite</string>
+
+    <!-- Options menu -->
+    <string name="step_options_menu_action_delete">Delete</string>
+    <string name="step_options_menu_action_edit">Edit</string>
+    <string name="step_options_menu_action_move_up">MoveUp</string>
+    <string name="step_options_menu_action_move_down">MoveDown</string>
+
+
+    <!-- PagerView -->
+    <string name="pagers_item_list">Recipes list</string>
+    <string name="pagers_item_favorites">Favorites</string>
+
+    <string name="desc_splash_screen">Splash</string>
+    <string name="desc_image_favorite">Liked</string>
+    <string name="desc_button_fab">FAB</string>
+    <string name="desc_button_add_cooking">Button Add</string>
+    <string name="desc_button_delete">Button Delete</string>
+
+
+    <!-- Hints -->
+    <string name="hint_recipe">Recipe</string>
+    <string name="hint_author">Author</string>
+    <string name="hint_category">Category</string>
+    <string name="hint_new_step">New step</string>
+
+    <!-- Labels -->
+    <string name="label_cooking">Cooking process</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

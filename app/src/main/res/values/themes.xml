@@ -1,0 +1,66 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+
+        <!-- Custom -->
+        <item name="android:windowFullscreen">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <!-- Tabs Theme -->
+    <style name="Theme.Tabs" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="tabIndicatorColor">@color/primaryLightColor</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+    </style>
+
+    <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <!-- Card -->
+    <style name="Theme.Card" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="cardElevation">6dp</item>
+        <item name="cardBackgroundColor">@color/primaryColor</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <!-- Card2 -->
+    <style name="Theme.Card2" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="cardElevation">6dp</item>
+        <item name="cardBackgroundColor">@color/secondaryLightColor</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <style name="Theme.Hyperlink" parent="Theme.MyApplication">
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">@drawable/hyperlink_underline</item>
+    </style>
+
+    <!--
+    <style name="Widget.AppTheme.LikeCheckBox" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="iconTint">@color/like_checkbox_tint</item>
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:textSize">@dimen/font_size</item>
+        <item name="backgroundTint">@color/orange</item>
+    </style>
+
+    <style name="Widget.AppTheme.Button" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/font_size</item>
+        <item name="iconSize">@dimen/post_elements_size</item>
+        <item name="iconTint">@color/gray_500</item>
+        <item name="backgroundTint">@color/gray_100</item>
+    </style>
+    -->
+</resources>

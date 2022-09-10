@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/list_graph"
+        android:icon="@drawable/ic_list"
+        android:title="@string/bottom_menu_action_recipes"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@id/favorite_graph"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/bottom_menu_action_favorite"
+        android:orderInCategory="2"
+        />
+</menu>
