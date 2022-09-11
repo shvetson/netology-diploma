@@ -3,6 +3,7 @@ package ru.shvets.myapplication.ui.recipe
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -78,6 +79,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             recipeViewModel.steps(recipe.id).observe(viewLifecycleOwner) { list ->
                 stepList.addAll(list)
                 stepAdapter.notifyDataSetChanged()
+                changeVisibilityImage()
             }
         }
 
@@ -133,6 +135,14 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
     }
 
+    private fun changeVisibilityImage() {
+        if (stepList.size == 0) {
+            binding.imageViewEmpty.visibility = View.VISIBLE
+        } else {
+            binding.imageViewEmpty.visibility = View.INVISIBLE
+        }
+    }
+
     private fun addStep() {
         val dialogBinding = DialogStepBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(requireActivity())
@@ -152,6 +162,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                         ?.let { step ->
                             stepList.add(step)
                             stepAdapter.notifyDataSetChanged()
+                            changeVisibilityImage()
                         }
                 }
             }
@@ -189,6 +200,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 stepList.remove(step)
                 stepAdapter.notifyDataSetChanged()
+                changeVisibilityImage()
             }
         }
 

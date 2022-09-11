@@ -51,6 +51,10 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
 
         mainViewModel.getFavorites().observe(viewLifecycleOwner) { list ->
             favoriteAdapter.differ.submitList(list.toMutableList())
+
+            if (list.isEmpty()) {
+                binding.imageViewEmpty.visibility = View.VISIBLE
+            }
         }
     }
 }

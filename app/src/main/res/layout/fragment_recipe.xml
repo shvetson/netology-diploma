@@ -160,12 +160,27 @@
 
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/view_list_steps"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:dividerHeight="2dp"
-                tools:listitem="@layout/item_step" />
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/view_list_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:dividerHeight="2dp"
+                    tools:listitem="@layout/item_step" />
+
+                <ImageView
+                    android:id="@+id/image_view_empty"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:visibility="invisible"
+                    app:tint="@color/primaryLightColor"
+                    android:src="@drawable/empty_list" />
+
+            </FrameLayout>
 
         </LinearLayout>
 

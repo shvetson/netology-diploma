@@ -38,10 +38,6 @@ class RecipeRepositoryImpl(
         return recipeDao.getById(id).toRecipeFromEntity()
     }
 
-    override suspend fun getCount(): Int {
-        return recipeDao.getCount()
-    }
-
     override fun getFavorites(): LiveData<List<RecipeCategory>> =
         Transformations.map(recipeCategoryDao.getFavorites()) { entities ->
             entities.map {
@@ -55,19 +51,25 @@ class RecipeRepositoryImpl(
             }
         }
 
-    override fun search(searchQuery: String): LiveData<List<Recipe>> {
-        return Transformations.map(recipeDao.search(searchQuery)) { entities ->
+    override fun search(searchQuery: String): LiveData<List<RecipeCategory>> {
+        return Transformations.map(recipeCategoryDao.search(searchQuery)) { entities ->
             entities.map {
-                it.toRecipeFromEntity()
+                RecipeCategory(
+                    id = it.id,
+                    name = it.name,
+                    author = it.author,
+                    isLiked = it.isLiked,
+                    category = it.category,
+                )
             }
         }
     }
 
-    override suspend fun delete(recipe: RecipeCategory) {
-        recipeDao.delete(recipe.id)
+    override fun delete(id: Long) {
+        recipeDao.delete(id)
     }
 
-    override suspend fun insert(recipe: Recipe) {
+    override fun insert(recipe: Recipe) {
         recipeDao.insert(RecipeEntity.toEntityFromRecipe(recipe))
     }
 

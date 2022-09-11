@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
+import androidx.core.view.isInvisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
 import ru.shvets.myapplication.R
@@ -38,6 +39,10 @@ class TabDetailsFragment : Fragment(R.layout.fragment_tab_details) {
         recipeViewModel.steps(recipeId).observe(viewLifecycleOwner) { it ->
             list.addAll(it)
             adapter.notifyDataSetChanged()
+
+            if (it.isEmpty()) {
+                binding.imageViewIcon.visibility = View.VISIBLE
+            }
         }
     }
 

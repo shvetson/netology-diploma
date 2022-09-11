@@ -8,11 +8,10 @@ interface RecipeRepository {
     val getAll: LiveData<List<Recipe>>
     fun getAllRecipes(): LiveData<List<RecipeCategory>>
     fun getById(id: Long): Recipe
-    suspend fun getCount(): Int
     fun getFavorites(): LiveData<List<RecipeCategory>>
-    fun search(searchQuery: String): LiveData<List<Recipe>>
-    suspend fun delete(recipe: RecipeCategory)
-    suspend fun insert(recipe: Recipe)
+    fun search(searchQuery: String): LiveData<List<RecipeCategory>>
+    fun delete(id: Long)
+    fun insert(recipe: Recipe)
     suspend fun save(recipe: Recipe)
     suspend fun updateLiked(recipe: RecipeCategory)
     suspend fun updateId(recipe: Recipe)

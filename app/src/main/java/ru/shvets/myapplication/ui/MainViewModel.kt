@@ -1,6 +1,7 @@
 package ru.shvets.myapplication.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -26,7 +27,7 @@ class MainViewModel(
         return recipeRepository.getFavorites()
     }
 
-    fun search(searchQuery: String): LiveData<List<Recipe>> {
+    fun search(searchQuery: String): LiveData<List<RecipeCategory>> {
         return recipeRepository.search(searchQuery)
     }
 
@@ -38,7 +39,7 @@ class MainViewModel(
 
     fun delete(recipe: RecipeCategory) {
         viewModelScope.launch(Dispatchers.IO) {
-            recipeRepository.delete(recipe)
+            recipeRepository.delete(recipe.id)
         }
     }
 
@@ -47,15 +48,20 @@ class MainViewModel(
             recipeRepository.updateLiked(recipe)
         }
     }
-//
-//    fun updateDragDown(recipeStart: Recipe, recipeEnd: Recipe) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            recipeRepository.delete(recipeEnd)
-//            recipeRepository.delete(recipeStart)
-//            val newRecipeEnd = recipeStart.copy(id = recipeEnd.id)
-//            recipeRepository.insert(newRecipeEnd)
-//            val newRecipeStart = recipeEnd.copy(id = recipeStart.id)
-//            recipeRepository.insert(newRecipeStart)
-//        }
-//    }
+
+    fun updateDragDown(recipeStart: RecipeCategory, recipeEnd: RecipeCategory) {
+            val recipeStartId = recipeStart.id
+            val recipeEndId = recipeEnd.id
+
+            recipeRepository.delete(recipeEndId)
+            recipeRepository.delete(recipeStartId)
+
+            val newRecipeEnd = recipeRepository.getById(recipeEndId)
+            Log.d("App_tag", newRecipeEnd.toString())
+            recipeRepository.insert(newRecipeEnd.copy(id = recipeEndId))
+
+            val newRecipeStart = recipeRepository.getById(recipeStartId)
+            Log.d("App_tag", newRecipeStart.toString())
+            recipeRepository.insert(newRecipeStart.copy(id = recipeStartId))
+    }
 }

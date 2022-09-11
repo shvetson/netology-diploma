@@ -35,6 +35,18 @@
         tools:listitem="@layout/item_recipe"
         android:visibility="visible"/>
 
+    <ImageView
+        android:id="@+id/image_view_empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_feed"
+        app:tint="@color/primaryLightColor"
+        android:src="@drawable/empty_list"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_user"
         android:layout_width="wrap_content"

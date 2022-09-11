@@ -15,12 +15,6 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE id = :id")
     fun getById(id: Long): RecipeEntity
 
-    @Query("SELECT COUNT(*) FROM recipes")
-    fun getCount(): Int
-
-    @Query("SELECT * FROM recipes WHERE name LIKE :searchQuery ORDER BY id DESC")
-    fun search(searchQuery: String): LiveData<List<RecipeEntity>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(recipe: RecipeEntity)
 

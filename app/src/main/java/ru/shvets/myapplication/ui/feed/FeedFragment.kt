@@ -2,13 +2,21 @@ package ru.shvets.myapplication.ui.feed
 
 import android.graphics.Canvas
 import android.os.Bundle
+import android.text.InputType
 import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -75,6 +83,10 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         mainViewModel.getAllRecipes().observe(viewLifecycleOwner) { list ->
             recipeAdapter.differ.submitList(list.toMutableList())
+
+            if (list.isEmpty()) {
+                binding.imageViewEmpty.visibility = View.VISIBLE
+            }
 //            val title = getString(R.string.app_name) + " - " + if (list.isNotEmpty()) list.size.toString()  else ""
 //            (activity as AppCompatActivity).supportActionBar?.title = title
         }
@@ -90,58 +102,51 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         val itemTouchHelper = ItemTouchHelper(itemMoveCallback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
-//        val menuHost: MenuHost = requireActivity()
-//        menuHost.addMenuProvider(object : MenuProvider {
-//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//            }
-//
-//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                return false
-//            }
-//
-//            override fun onPrepareMenu(menu: Menu) {
-//                val item: MenuItem = menu.findItem(R.id.action_search)
-//                val searchView = item.actionView as SearchView
-//                searchView.inputType = InputType.TYPE_CLASS_TEXT
-////                searchView.isSubmitButtonEnabled = true
-//
-//                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//                    override fun onQueryTextSubmit(query: String?): Boolean {
-//                        if (query != null) {
-//                            searchDatabase(query)
-//                        }
-//                        return true
-//                    }
-//
-//                    override fun onQueryTextChange(newText: String?): Boolean {
-//                        if (newText != null) {
-//                            searchDatabase(newText)
-//                        }
-//                        return true
-//                    }
-//
-//                    private fun searchDatabase(query: String) {
-//                        val searchQuery = "%$query%"
-//                        mainViewModel.search(searchQuery).observe(requireActivity()) { list ->
-//                            list.let {
-//                                recipeAdapter.differ.submitList(list)
-//                            }
-//                        }
-//
-//                    }
-//                })
-//                super.onPrepareMenu(menu)
-//            }
-//        }, viewLifecycleOwner)
+        setupMenu()
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.action_search -> {
-//            }
-//        }
-//        return true
-//    }
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                val item: MenuItem = menu.findItem(R.id.action_search)
+                val searchView = item.actionView as SearchView
+                searchView.inputType = InputType.TYPE_CLASS_TEXT
+                //                searchView.isSubmitButtonEnabled = true
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        if (query != null) {
+                            searchDatabase(query)
+                        }
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        if (newText != null) {
+                            searchDatabase(newText)
+                        }
+                        return true
+                    }
+
+                    private fun searchDatabase(query: String) {
+                        val searchQuery = "%$query%"
+                        mainViewModel.search(searchQuery).observe(requireActivity()) {
+                            recipeAdapter.differ.submitList(it)
+                        }
+                    }
+                })
+                super.onPrepareMenu(menu)
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
 
     inner class ItemMoveCallback : ItemTouchHelper.Callback() {
 
@@ -167,25 +172,25 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             return true
         }
 
-//        override fun onMoved(
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            fromPos: Int,
-//            target: RecyclerView.ViewHolder,
-//            toPos: Int,
-//            x: Int,
-//            y: Int
-//        ) {
-//            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
-//
-//            if (fromPos != toPos) {
-//                val recipeStart = recipeAdapter.differ.currentList[fromPos]
-//                val recipeEnd = recipeAdapter.differ.currentList[toPos]
-//                mainViewModel.updateDragDown(recipeStart, recipeEnd)
-//            }
+        override fun onMoved(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            fromPos: Int,
+            target: RecyclerView.ViewHolder,
+            toPos: Int,
+            x: Int,
+            y: Int
+        ) {
+            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
+
+            if (fromPos != toPos) {
+                val recipeStart = recipeAdapter.differ.currentList[fromPos]
+                val recipeEnd = recipeAdapter.differ.currentList[toPos]
+                mainViewModel.updateDragDown(recipeStart, recipeEnd)
+            }
 //            recyclerView.adapter?.notifyItemMoved(fromPos, toPos)
-//        }
-//
+        }
+
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.absoluteAdapterPosition
             val currentRecipe = recipeAdapter.differ.currentList[position]
@@ -203,7 +208,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     ).show()
                 }
                 ItemTouchHelper.RIGHT -> {
-                    val direction = FeedFragmentDirections.actionFeedFragmentToRecipeFragment(currentRecipe)
+                    val direction =
+                        FeedFragmentDirections.actionFeedFragmentToRecipeFragment(currentRecipe)
                     findNavController().navigate(direction)
                     binding.recyclerView.adapter!!.notifyItemChanged(position)
                 }
