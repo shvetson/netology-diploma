@@ -3,6 +3,7 @@ package ru.shvets.myapplication.ui.feed
 import android.graphics.Canvas
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,11 +19,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import ru.shvets.myapplication.R
 import ru.shvets.myapplication.adapter.RecipeActionListener
@@ -32,6 +30,7 @@ import ru.shvets.myapplication.model.Recipe
 import ru.shvets.myapplication.model.RecipeCategory
 import ru.shvets.myapplication.ui.MainViewModel
 import ru.shvets.myapplication.ui.recipe.RecipeFragment
+import ru.shvets.myapplication.utils.Constants
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
     private lateinit var binding: FragmentFeedBinding
@@ -65,20 +64,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFeedBinding.bind(view)
 
-//        val size = mainViewModel.counts()
-//        if (size == 0) {
-//            Log.d("App_Tag", "$size")
-//            binding.recyclerView.visibility = View.INVISIBLE
-//            binding.imageViewBook.visibility = View.VISIBLE
-//        }
-
         binding.recyclerView.apply {
+            (itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
             layoutManager = LinearLayoutManager(requireActivity())
+            adapter = recipeAdapter
 
             val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
             addItemDecoration(divider)
-
-            adapter = recipeAdapter
         }
 
         mainViewModel.getAllRecipes().observe(viewLifecycleOwner) { list ->
@@ -167,28 +159,21 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             val startPosition = viewHolder.absoluteAdapterPosition
             val endPosition = target.absoluteAdapterPosition
 
-            if (startPosition == -1) return false
+            if (startPosition != RecyclerView.NO_POSITION ||
+                endPosition != RecyclerView.NO_POSITION
+            ) {
+//                if (startPosition != endPosition) {
+                val recipeStart = recipeAdapter.differ.currentList[startPosition]
+                val recipeEnd = recipeAdapter.differ.currentList[endPosition]
+
+                Log.d(Constants.TAG, "start $recipeStart.toString()")
+                Log.d(Constants.TAG, "end $recipeEnd.toString()")
+
+//                mainViewModel.updateDragDrop(recipeStart, recipeEnd)
 //            recyclerView.adapter?.notifyItemMoved(startPosition, endPosition)
-            return true
-        }
-
-        override fun onMoved(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            fromPos: Int,
-            target: RecyclerView.ViewHolder,
-            toPos: Int,
-            x: Int,
-            y: Int
-        ) {
-            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
-
-            if (fromPos != toPos) {
-                val recipeStart = recipeAdapter.differ.currentList[fromPos]
-                val recipeEnd = recipeAdapter.differ.currentList[toPos]
-                mainViewModel.updateDragDown(recipeStart, recipeEnd)
+//                }
             }
-//            recyclerView.adapter?.notifyItemMoved(fromPos, toPos)
+            return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

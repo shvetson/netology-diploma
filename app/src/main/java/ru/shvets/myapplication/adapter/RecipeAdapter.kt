@@ -1,42 +1,24 @@
 package ru.shvets.myapplication.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ru.shvets.myapplication.R
 import ru.shvets.myapplication.databinding.ItemRecipeBinding
 import ru.shvets.myapplication.model.RecipeCategory
 
 class RecipeAdapter(
-    private val recipeActionListener: RecipeActionListener
-    ): ListAdapter<RecipeCategory, RecipeAdapter.RecipeViewHolder>(RecipeDiffCallback()) {
+    private val listener: RecipeActionListener
+) : ListAdapter<RecipeCategory, RecipeAdapter.RecipeViewHolder>(RecipeDiffCallback()),
+    View.OnClickListener {
 
-    inner class RecipeViewHolder(
-        private val binding: ItemRecipeBinding,
-        private val recipeActionListener: RecipeActionListener
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(recipe: RecipeCategory) {
-            binding.apply {
-                textViewName.text = recipe.name
-                textViewAuthor.text = recipe.author
-                textViewCategory.text = recipe.category
-                buttonLiked.isChecked = recipe.isLiked
-            }
-
-            binding.root.setOnClickListener{
-                recipeActionListener.onItemClicked(recipe)
-                return@setOnClickListener
-            }
-
-            binding.buttonLiked.setOnClickListener {
-                recipeActionListener.onLikeClicked(recipe)
-                return@setOnClickListener
-            }
-        }
-    }
+    class RecipeViewHolder(
+        val binding: ItemRecipeBinding
+    ) : RecyclerView.ViewHolder(binding.root)
 
     class RecipeDiffCallback : DiffUtil.ItemCallback<RecipeCategory>() {
         override fun areItemsTheSame(oldItem: RecipeCategory, newItem: RecipeCategory): Boolean {
@@ -63,11 +45,33 @@ class RecipeAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemRecipeBinding.inflate(inflater, parent, false)
-        return RecipeViewHolder(binding, recipeActionListener)
+
+        binding.buttonLiked.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
+
+        return RecipeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        holder.bind(differ.currentList[position])
-//        holder.bind(getItem(position))
+        val recipe = differ.currentList[position]
+
+        with(holder.binding) {
+            buttonLiked.tag = recipe
+            root.tag = recipe
+
+            textViewName.text = recipe.name
+            textViewAuthor.text = recipe.author
+            textViewCategory.text = recipe.category
+            buttonLiked.isChecked = recipe.isLiked
+        }
+    }
+
+    override fun onClick(view: View) {
+        val recipe = view.tag as RecipeCategory
+
+        when (view.id) {
+            R.id.button_liked -> listener.onLikeClicked(recipe)
+            else -> listener.onItemClicked(recipe)
+        }
     }
 }

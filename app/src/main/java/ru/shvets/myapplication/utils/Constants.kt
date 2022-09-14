@@ -8,5 +8,6 @@ class Constants {
         const val NEW_STEP_ID = 0L
         const val DATABASE_NAME = "recipes_database.db"
         const val POSITION = "POSITION"
+        const val TAG = "App_recipes"
     }
 }
