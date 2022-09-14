@@ -7,6 +7,7 @@ import ru.shvets.myapplication.model.Recipe
 
 fun RecipeEntity.toModel() = Recipe(
     id = id,
+    sortId = sortId,
     name = name,
     author = author,
     categoryId = categoryId,
@@ -15,6 +16,7 @@ fun RecipeEntity.toModel() = Recipe(
 
 fun Recipe.toEntity() = RecipeEntity(
     id = id,
+    sortId = sortId,
     name = name,
     author = author,
     categoryId = categoryId,

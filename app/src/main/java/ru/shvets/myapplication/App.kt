@@ -21,7 +21,7 @@ class App:Application() {
 
         database = AppDatabase.buildDatabase(applicationContext, Constants.DATABASE_NAME)
 
-        recipeRepository = RecipeRepositoryImpl(database.recipeDao(), database.recipeCategoryDao())
+        recipeRepository = RecipeRepositoryImpl(database.recipeDao())
         categoryRepository = CategoryRepositoryImpl(database.categoryDao())
         stepRepository = StepRepositoryImpl(database.stepDao())
     }

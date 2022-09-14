@@ -9,7 +9,8 @@ import ru.shvets.myapplication.utils.Constants
 @Entity(
     tableName = "recipes",
     indices = [
-        Index("name")
+        Index("name"),
+        Index("category_id")
     ],
     foreignKeys = [
         ForeignKey(
@@ -25,6 +26,9 @@ data class RecipeEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0L,
+    @NotNull
+    @ColumnInfo(name = "sort_id")
+    val sortId: Long = 0L,
     @NotNull
     @ColumnInfo(name = "name")
     val name: String,
@@ -43,19 +47,23 @@ data class RecipeEntity(
 ) {
     fun toRecipeFromEntity(): Recipe = Recipe(
         id = id,
+        sortId = sortId,
         name = name,
         author = author,
         categoryId = categoryId,
         isDefault = isDefault,
-        isLiked = isLiked)
+        isLiked = isLiked
+    )
 
-    companion object{
+    companion object {
         fun toEntityFromRecipe(recipe: Recipe): RecipeEntity = RecipeEntity(
             id = Constants.NEW_RECIPE_ID,
+            sortId = recipe.sortId,
             name = recipe.name,
             author = recipe.author,
             categoryId = recipe.categoryId,
             isDefault = recipe.isDefault,
-            isLiked = recipe.isLiked)
+            isLiked = recipe.isLiked
+        )
     }
 }

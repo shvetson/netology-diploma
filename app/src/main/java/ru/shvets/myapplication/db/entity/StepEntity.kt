@@ -7,6 +7,9 @@ import ru.shvets.myapplication.utils.Constants
 
 @Entity(
     tableName = "steps",
+    indices = [
+        Index("recipe_id")
+              ],
     foreignKeys = [
         ForeignKey(
             entity = RecipeEntity::class,

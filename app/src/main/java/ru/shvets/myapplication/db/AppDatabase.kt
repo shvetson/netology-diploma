@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import ru.shvets.myapplication.db.dao.CategoryDao
-import ru.shvets.myapplication.db.dao.RecipeCategoryDao
 import ru.shvets.myapplication.db.dao.RecipeDao
 import ru.shvets.myapplication.db.dao.StepDao
 import ru.shvets.myapplication.db.entity.CategoryEntity
@@ -24,7 +23,6 @@ import ru.shvets.myapplication.db.entity.StepEntity
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
     abstract fun categoryDao(): CategoryDao
-    abstract fun recipeCategoryDao(): RecipeCategoryDao
     abstract fun stepDao(): StepDao
 
     companion object {

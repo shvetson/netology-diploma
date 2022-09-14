@@ -2,7 +2,7 @@ package ru.shvets.myapplication.db.repository.impl
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import ru.shvets.myapplication.db.dao.RecipeCategoryDao
+import androidx.lifecycle.map
 import ru.shvets.myapplication.model.Recipe
 import ru.shvets.myapplication.db.dao.RecipeDao
 import ru.shvets.myapplication.db.entity.RecipeEntity
@@ -11,18 +11,21 @@ import ru.shvets.myapplication.model.RecipeCategory
 import ru.shvets.myapplication.utils.Constants
 
 class RecipeRepositoryImpl(
-    private val recipeDao: RecipeDao,
-    private val recipeCategoryDao: RecipeCategoryDao
+    private val recipeDao: RecipeDao
 ) : RecipeRepository {
 
-    override val getAll: LiveData<List<Recipe>> = Transformations.map(recipeDao.getAll()) { entities ->
-        entities.map {
-            it.toRecipeFromEntity()
-        }
+    override val getAll: List<Recipe> = recipeDao.getAll().map { entity->
+        entity.toRecipeFromEntity()
     }
 
+//    override val getAll: LiveData<List<Recipe>> = Transformations.map(recipeDao.getAll()) { entities ->
+//        entities.map {
+//            it.toRecipeFromEntity()
+//        }
+//    }
+
     override fun getAllRecipes(): LiveData<List<RecipeCategory>> =
-        Transformations.map(recipeCategoryDao.getAll()) { entities ->
+        Transformations.map(recipeDao.getRecipes()) { entities ->
             entities.map {
                 RecipeCategory(
                     id = it.id,
@@ -39,7 +42,7 @@ class RecipeRepositoryImpl(
     }
 
     override fun getFavorites(): LiveData<List<RecipeCategory>> =
-        Transformations.map(recipeCategoryDao.getFavorites()) { entities ->
+        Transformations.map(recipeDao.getFavorites()) { entities ->
             entities.map {
                 RecipeCategory(
                     id = it.id,
@@ -52,7 +55,7 @@ class RecipeRepositoryImpl(
         }
 
     override fun search(searchQuery: String): LiveData<List<RecipeCategory>> {
-        return Transformations.map(recipeCategoryDao.search(searchQuery)) { entities ->
+        return Transformations.map(recipeDao.search(searchQuery)) { entities ->
             entities.map {
                 RecipeCategory(
                     id = it.id,
@@ -77,7 +80,7 @@ class RecipeRepositoryImpl(
         if (recipe.id == Constants.NEW_RECIPE_ID) {
             recipeDao.insert(RecipeEntity.toEntityFromRecipe(recipe))
         } else {
-            recipeDao.updateByID(recipe.id, recipe.name, recipe.author, recipe.categoryId)
+            recipeDao.updateRecipe(recipe.id, recipe.name, recipe.author, recipe.categoryId, recipe.id)
         }
     }
 
@@ -85,11 +88,15 @@ class RecipeRepositoryImpl(
         recipeDao.updateLiked(recipe.id)
     }
 
-    override suspend fun updateId(recipe: Recipe) {
-        recipeDao.updateId(recipe.id)
+    override fun updateSortId(sortId: Long, id: Long) {
+        recipeDao.updateSortId(sortId, id)
     }
 
-    override suspend fun remove(recipe: Recipe, onSuccess: () -> Unit) {
+    override fun remove(recipe: Recipe, onSuccess: () -> Unit) {
         TODO("Not yet implemented")
+    }
+
+    override fun updateRecipe(id: Long, name: String, author: String, categoryId: Long, sortId: Long) {
+        recipeDao.updateRecipe(id, name, author, categoryId, sortId)
     }
 }

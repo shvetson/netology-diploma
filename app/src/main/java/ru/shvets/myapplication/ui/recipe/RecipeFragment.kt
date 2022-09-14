@@ -115,6 +115,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
             val newRecipe = Recipe(
                 id = id,
+                sortId = id,
                 name = binding.textEditName.text.toString(),
                 author = binding.textEditAuthor.text.toString(),
                 categoryId = currentCategory.id

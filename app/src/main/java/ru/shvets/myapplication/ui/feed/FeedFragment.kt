@@ -41,6 +41,18 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+                Log.d(Constants.TAG, "start")
+        mainViewModel.loadRecipes().map { recipe ->
+            Log.d(Constants.TAG, recipe.toString())
+            mainViewModel.updateRecipe(
+                id = recipe.id,
+                name = recipe.name,
+                author = recipe.author,
+                categoryId = recipe.categoryId,
+                sortId = recipe.id
+            )
+        }
+
         recipeAdapter = RecipeAdapter(object : RecipeActionListener {
             override fun onLikeClicked(recipe: RecipeCategory) {
                 mainViewModel.updateLiked(recipe)
@@ -151,6 +163,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             return makeMovementFlags(dragFlags, swipeFlags)
         }
 
+        override fun isLongPressDragEnabled(): Boolean {
+            return true
+        }
+
+        override fun isItemViewSwipeEnabled(): Boolean {
+            return true
+        }
+
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
@@ -169,9 +189,10 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 Log.d(Constants.TAG, "start $recipeStart.toString()")
                 Log.d(Constants.TAG, "end $recipeEnd.toString()")
 
-//                mainViewModel.updateDragDrop(recipeStart, recipeEnd)
-//            recyclerView.adapter?.notifyItemMoved(startPosition, endPosition)
-//                }
+                mainViewModel.updateDragDrop(
+                    mainViewModel.getRecipe(recipeStart.id),
+                    mainViewModel.getRecipe(recipeEnd.id)
+                )
             }
             return true
         }
@@ -183,9 +204,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             when (direction) {
                 ItemTouchHelper.LEFT -> {
                     mainViewModel.delete(currentRecipe)
-                    binding.recyclerView.adapter?.notifyItemRemoved(position)
-                    binding.recyclerView.adapter?.notifyDataSetChanged()
-//                        recipeAdapter.differ.submitList(recipeList)
+//                    binding.recyclerView.adapter?.notifyItemRemoved(position)
                     Toast.makeText(
                         requireActivity(),
                         "${currentRecipe.name} ${getString(R.string.recipe_is_deleted)}",
