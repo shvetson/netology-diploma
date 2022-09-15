@@ -76,7 +76,7 @@ class RecipeRepositoryImpl(
         recipeDao.insert(RecipeEntity.toEntityFromRecipe(recipe))
     }
 
-    override suspend fun save(recipe: Recipe) {
+    override fun save(recipe: Recipe) {
         if (recipe.id == Constants.NEW_RECIPE_ID) {
             recipeDao.insert(RecipeEntity.toEntityFromRecipe(recipe))
         } else {
@@ -84,7 +84,7 @@ class RecipeRepositoryImpl(
         }
     }
 
-    override suspend fun updateLiked(recipe: RecipeCategory) {
+    override fun updateLiked(recipe: RecipeCategory) {
         recipeDao.updateLiked(recipe.id)
     }
 

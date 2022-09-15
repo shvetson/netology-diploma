@@ -1,10 +1,15 @@
 package ru.shvets.myapplication.ui.favorite
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +31,8 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
         super.onCreate(savedInstanceState)
         actionBar = (activity as AppCompatActivity).supportActionBar!!
         actionBar.setTitle(R.string.title_favorite)
+
+        setupMenu()
 
         favoriteAdapter = FavoriteAdapter(object : RecipeActionListener {
             override fun onLikeClicked(recipe: RecipeCategory) {
@@ -56,5 +63,19 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
                 binding.imageViewEmpty.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                val item: MenuItem = menu.findItem(R.id.action_search)
+                item.isVisible = false
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+        })
     }
 }

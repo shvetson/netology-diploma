@@ -53,9 +53,7 @@ class MainViewModel(
     }
 
     fun updateLiked(recipe: RecipeCategory) {
-        viewModelScope.launch(Dispatchers.IO) {
             recipeRepository.updateLiked(recipe)
-        }
     }
 
     fun updateDragDrop(recipeStart: Recipe, recipeEnd: Recipe) {

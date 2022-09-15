@@ -1,5 +1,6 @@
 package ru.shvets.myapplication.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +47,10 @@ class RecipeAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemRecipeBinding.inflate(inflater, parent, false)
 
-        binding.buttonLiked.setOnClickListener(this)
-        binding.root.setOnClickListener(this)
+//        if (RecipeViewHolder(binding).absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+            binding.buttonLiked.setOnClickListener(this)
+            binding.root.setOnClickListener(this)
+//        }
 
         return RecipeViewHolder(binding)
     }

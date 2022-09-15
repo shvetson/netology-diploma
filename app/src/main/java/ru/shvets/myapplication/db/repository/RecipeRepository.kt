@@ -13,8 +13,8 @@ interface RecipeRepository {
     fun search(searchQuery: String): LiveData<List<RecipeCategory>>
     fun delete(id: Long)
     fun insert(recipe: Recipe)
-    suspend fun save(recipe: Recipe)
-    suspend fun updateLiked(recipe: RecipeCategory)
+    fun save(recipe: Recipe)
+    fun updateLiked(recipe: RecipeCategory)
     fun updateSortId(sortId: Long, id: Long)
     fun remove(recipe: Recipe, onSuccess: ()->Unit)
     fun updateRecipe(id: Long, name: String, author: String, categoryId: Long, sortId: Long)

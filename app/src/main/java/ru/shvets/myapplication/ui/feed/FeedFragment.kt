@@ -3,13 +3,13 @@ package ru.shvets.myapplication.ui.feed
 import android.graphics.Canvas
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
@@ -30,7 +30,6 @@ import ru.shvets.myapplication.model.Recipe
 import ru.shvets.myapplication.model.RecipeCategory
 import ru.shvets.myapplication.ui.MainViewModel
 import ru.shvets.myapplication.ui.recipe.RecipeFragment
-import ru.shvets.myapplication.utils.Constants
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
     private lateinit var binding: FragmentFeedBinding
@@ -40,18 +39,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-                Log.d(Constants.TAG, "start")
-        mainViewModel.loadRecipes().map { recipe ->
-            Log.d(Constants.TAG, recipe.toString())
-            mainViewModel.updateRecipe(
-                id = recipe.id,
-                name = recipe.name,
-                author = recipe.author,
-                categoryId = recipe.categoryId,
-                sortId = recipe.id
-            )
-        }
 
         recipeAdapter = RecipeAdapter(object : RecipeActionListener {
             override fun onLikeClicked(recipe: RecipeCategory) {
@@ -79,6 +66,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding.recyclerView.apply {
             (itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
             layoutManager = LinearLayoutManager(requireActivity())
+            adapter?.setHasStableIds(true)
             adapter = recipeAdapter
 
             val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
@@ -86,13 +74,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
 
         mainViewModel.getAllRecipes().observe(viewLifecycleOwner) { list ->
-            recipeAdapter.differ.submitList(list.toMutableList())
+            recipeAdapter.differ.submitList(list)
 
             if (list.isEmpty()) {
                 binding.imageViewEmpty.visibility = View.VISIBLE
             }
-//            val title = getString(R.string.app_name) + " - " + if (list.isNotEmpty()) list.size.toString()  else ""
-//            (activity as AppCompatActivity).supportActionBar?.title = title
+            val title = getString(R.string.app_name) + ", " + if (list.isNotEmpty()) list.size.toString()  else ""
+            (activity as AppCompatActivity).supportActionBar?.title = title
         }
 
         binding.fabAddUser.setOnClickListener {
@@ -112,45 +100,45 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private fun setupMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
+
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return false
-            }
-
-            override fun onPrepareMenu(menu: Menu) {
                 val item: MenuItem = menu.findItem(R.id.action_search)
+                item.isVisible = true
                 val searchView = item.actionView as SearchView
                 searchView.inputType = InputType.TYPE_CLASS_TEXT
-                //                searchView.isSubmitButtonEnabled = true
 
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         if (query != null) {
                             searchDatabase(query)
                         }
-                        return true
+                        return false
                     }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText != null) {
-                            searchDatabase(newText)
+                    override fun onQueryTextChange(query: String?): Boolean {
+                        if (query != null) {
+                            searchDatabase(query)
                         }
                         return true
                     }
 
                     private fun searchDatabase(query: String) {
                         val searchQuery = "%$query%"
-                        mainViewModel.search(searchQuery).observe(requireActivity()) {
-                            recipeAdapter.differ.submitList(it)
+                        mainViewModel.search(searchQuery).observe(viewLifecycleOwner) {list->
+                            list.let {
+                                recipeAdapter.differ.submitList(it)
+                            }
                         }
                     }
                 })
-                super.onPrepareMenu(menu)
+
             }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+    }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+}
 
     inner class ItemMoveCallback : ItemTouchHelper.Callback() {
 
@@ -182,17 +170,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             if (startPosition != RecyclerView.NO_POSITION ||
                 endPosition != RecyclerView.NO_POSITION
             ) {
-//                if (startPosition != endPosition) {
-                val recipeStart = recipeAdapter.differ.currentList[startPosition]
-                val recipeEnd = recipeAdapter.differ.currentList[endPosition]
-
-                Log.d(Constants.TAG, "start $recipeStart.toString()")
-                Log.d(Constants.TAG, "end $recipeEnd.toString()")
-
-                mainViewModel.updateDragDrop(
-                    mainViewModel.getRecipe(recipeStart.id),
-                    mainViewModel.getRecipe(recipeEnd.id)
-                )
+                if (startPosition != endPosition) {
+                    val recipeStart =
+                        mainViewModel.getRecipe(recipeAdapter.differ.currentList[startPosition].id)
+                    val recipeEnd =
+                        mainViewModel.getRecipe(recipeAdapter.differ.currentList[endPosition].id)
+                    mainViewModel.updateDragDrop(recipeStart, recipeEnd)
+                }
             }
             return true
         }
