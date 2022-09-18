@@ -1,5 +1,6 @@
 package ru.shvets.myapplication.ui.recipe
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -28,6 +29,7 @@ import ru.shvets.myapplication.model.RecipeCategory
 import ru.shvets.myapplication.model.Step
 import ru.shvets.myapplication.utils.Constants
 import java.util.*
+import kotlin.collections.ArrayList
 
 private const val ARG_PARAM = "recipe"
 
@@ -38,13 +40,12 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     private lateinit var stepAdapter: StepAdapter
     private lateinit var currentCategory: Category
     private var currentRecipe: RecipeCategory? = null
-    private lateinit var stepList: ArrayList<Step>
+    private val stepList: ArrayList<Step> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         actionBar = (activity as AppCompatActivity).supportActionBar!!
         currentRecipe = arguments?.getParcelable(ARG_PARAM)
-        stepList = arrayListOf()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,6 +55,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             if (currentRecipe == null) getString(R.string.title_add) else getString(R.string.title_edit_recipe)
 
 //        requestFocusAndShowSoftInput(binding.textEditName)
+        binding.textEditName.requestFocus()
 
         val spinnerCategoryAdapter = ArrayAdapter(
             requireContext(),
@@ -75,12 +77,12 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         binding.viewListSteps.adapter = stepAdapter
 
         if (currentRecipe == null) {
-            stepList = arrayListOf()
             changeVisibilityImage()
         }
 
-        currentRecipe?.let { recipe ->
-            recipeViewModel.steps(recipe.id).observe(viewLifecycleOwner) { list ->
+        currentRecipe?.let {
+            recipeViewModel.steps(it.id).observe(viewLifecycleOwner) { list ->
+                stepList.clear()
                 stepList.addAll(list)
                 stepAdapter.notifyDataSetChanged()
                 changeVisibilityImage()
@@ -121,42 +123,53 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
 
         binding.buttonSave.setOnClickListener {
-            val id = currentRecipe?.id ?: Constants.NEW_RECIPE_ID
+            if (binding.textEditName.text?.isBlank() == true) {
+                binding.textEditName.error = getString(R.string.error_empty)
+            } else {
 
-            val newRecipe = Recipe(
-                id = id,
-                sortId = (recipeViewModel.getMaxSortId() + 1).toLong(),
-                name = binding.textEditName.text.toString(),
-                author = binding.textEditAuthor.text.toString(),
-                categoryId = currentCategory.id,
-                preparation = binding.textEditPreparation.text.toString().toInt(),
-                total = binding.textEditTotal.text.toString().toInt(),
-                portion = binding.textEditPortion.text.toString().toInt(),
-                ingredients = binding.textEditIngredients.text.toString()
-            )
+                if (binding.spinnerCategory.text.isBlank()) {
+                    binding.spinnerCategory.error = getString(R.string.error_empty)
+                } else {
+                    val id = currentRecipe?.id ?: Constants.NEW_RECIPE_ID
 
-            if (stepList.size == 0) {
-                stepList.add(
-                    Step(
-                        id = Constants.NEW_STEP_ID,
-                        name = getString(R.string.default_row_empty_list),
-                        recipeId = 0,
-                        orderId = 0
+                    val newRecipe = Recipe(
+                        id = id,
+                        sortId = (recipeViewModel.getMaxSortId() + 1).toLong(),
+                        name = binding.textEditName.text.toString(),
+                        author = binding.textEditAuthor.text.toString(),
+                        categoryId = currentCategory.id,
+                        preparation = if (binding.textEditPreparation.text.toString()
+                                .isNotBlank()
+                        ) binding.textEditPreparation.text.toString().toInt() else 0,
+                        total = if (binding.textEditTotal.text.toString()
+                                .isNotBlank()
+                        ) binding.textEditTotal.text.toString().toInt() else 0,
+                        portion = if (binding.textEditPortion.text.toString()
+                                .isNotBlank()
+                        ) binding.textEditPortion.text.toString().toInt() else 0,
+                        ingredients = binding.textEditIngredients.text.toString()
                     )
-                )
+
+                    if (stepList.size == 0) {
+                        stepList.add(
+                            Step(
+                                id = Constants.NEW_STEP_ID,
+                                name = getString(R.string.default_row_empty_list),
+                                recipeId = 0,
+                                orderId = 0
+                            )
+                        )
+                    }
+                    setFragmentResult(
+                        requestKey = REQUEST_KEY,
+                        bundleOf(
+                            RESULT_KEY1 to newRecipe,
+                            RESULT_KEY2 to stepList
+                        )
+                    )
+                    findNavController().popBackStack()
+                }
             }
-
-            //TODO проверка на ввод данных
-            //вылетает при отсутствии category_id
-
-            setFragmentResult(
-                requestKey = REQUEST_KEY,
-                bundleOf(
-                    RESULT_KEY1 to newRecipe,
-                    RESULT_KEY2 to stepList
-                )
-            )
-            findNavController().popBackStack()
         }
     }
 
@@ -176,19 +189,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             .setPositiveButton(getString(R.string.btn_label_add)) { dialog, which ->
                 val name = dialogBinding.editTextAddStepProcess.text.toString()
                 if (name.isNotBlank()) {
-                    currentRecipe?.let { recipe ->
+                    stepList.add(
                         Step(
                             id = Constants.NEW_STEP_ID,
                             name = name,
-                            recipeId = recipe.id,
+                            recipeId = id.toLong(),
                             orderId = stepList.size.toLong()
                         )
-                    }
-                        ?.let { step ->
-                            stepList.add(step)
-                            stepAdapter.notifyDataSetChanged()
-                            changeVisibilityImage()
-                        }
+                    )
+                    stepAdapter.notifyDataSetChanged()
+                    changeVisibilityImage()
                 }
             }
             .create()
@@ -275,7 +285,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         popupMenu.show()
     }
 
-    // TODO перенести в viewModel
     private fun move(step: Step, moveBy: Int) {
         val oldIndex = stepList.indexOfFirst { it.id == step.id }
         if (oldIndex == -1) return
@@ -285,7 +294,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         stepAdapter.notifyDataSetChanged()
     }
 
-    // TODO перенести в viewModel
     private fun save(step: Step, newName: String) {
         val curIndex = stepList.indexOfFirst { it.id == step.id }
         if (curIndex == -1) return

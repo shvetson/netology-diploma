@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import ru.shvets.myapplication.App
 import ru.shvets.myapplication.model.Step
+import java.util.*
 
 class RecipeViewModel(
     application: Application
@@ -17,22 +17,24 @@ class RecipeViewModel(
     private val recipeRepository = (application.applicationContext as App).recipeRepository
 
     val data get() = categoryRepository.getAll
-
     val categories get() = categoryRepository.getCategories()
 
-    private val _list: MutableLiveData<List<Step>> by lazy {
-        MutableLiveData<List<Step>>()
+    private val _steps = MutableLiveData<List<Step>>()
+
+    fun steps(id: Long): LiveData<List<Step>> {
+        _steps.value = stepRepository.getAllSteps(id)
+        return _steps
     }
-
-    val list: LiveData<List<Step>> = _list
-
-    fun loadListSteps(id: Long): List<Step> {
-        return stepRepository.getAllSteps(id)
-    }
-
-    fun steps(id: Long) = stepRepository.getAll(id)
 
     fun getMaxSortId(): Int{
         return recipeRepository.getMaxSortId()
     }
+
+//    fun move(list: ArrayList<Step>, step: Step, moveBy: Int) {
+//        val oldIndex = list.indexOfFirst { it.id == step.id }
+//        if (oldIndex == -1) return
+//        val newIndex = oldIndex + moveBy
+//        if (newIndex < 0 || newIndex >= list.size) return
+//        Collections.swap(list, oldIndex, newIndex)
+//    }
 }
