@@ -28,7 +28,6 @@ import ru.shvets.myapplication.model.RecipeCategory
 import ru.shvets.myapplication.model.Step
 import ru.shvets.myapplication.utils.Constants
 import java.util.*
-import kotlin.collections.ArrayList
 
 private const val ARG_PARAM = "recipe"
 
@@ -75,6 +74,11 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         stepAdapter = StepAdapter(stepList)
         binding.viewListSteps.adapter = stepAdapter
 
+        if (currentRecipe == null) {
+            stepList = arrayListOf()
+            changeVisibilityImage()
+        }
+
         currentRecipe?.let { recipe ->
             recipeViewModel.steps(recipe.id).observe(viewLifecycleOwner) { list ->
                 stepList.addAll(list)
@@ -89,6 +93,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         }
 
         binding.buttonAdd.setOnClickListener {
+//            requestFocusAndShowSoftInput(binding.viewListSteps)
+            binding.textEditIngredients.clearFocus()
             addStep()
         }
 
@@ -107,6 +113,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     }
                 }
                 imageViewLiked.setChecked(currentRecipe!!.isLiked)
+                textEditPreparation.setText(currentRecipe!!.preparation.toString())
+                textEditTotal.setText(currentRecipe!!.total.toString())
+                textEditPortion.setText(currentRecipe!!.portion.toString())
+                textEditIngredients.setText(currentRecipe!!.ingredients)
             }
         }
 
@@ -115,22 +125,36 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
             val newRecipe = Recipe(
                 id = id,
-                sortId = id,
+                sortId = (recipeViewModel.getMaxSortId() + 1).toLong(),
                 name = binding.textEditName.text.toString(),
                 author = binding.textEditAuthor.text.toString(),
-                categoryId = currentCategory.id
+                categoryId = currentCategory.id,
+                preparation = binding.textEditPreparation.text.toString().toInt(),
+                total = binding.textEditTotal.text.toString().toInt(),
+                portion = binding.textEditPortion.text.toString().toInt(),
+                ingredients = binding.textEditIngredients.text.toString()
             )
 
-            currentRecipe?.let { recipe ->
-                recipeViewModel.insertAll(
-                    list = stepList,
-                    recipeId = recipe.id
+            if (stepList.size == 0) {
+                stepList.add(
+                    Step(
+                        id = Constants.NEW_STEP_ID,
+                        name = getString(R.string.default_row_empty_list),
+                        recipeId = 0,
+                        orderId = 0
+                    )
                 )
             }
 
+            //TODO проверка на ввод данных
+            //вылетает при отсутствии category_id
+
             setFragmentResult(
                 requestKey = REQUEST_KEY,
-                bundleOf(RESULT_KEY to newRecipe)
+                bundleOf(
+                    RESULT_KEY1 to newRecipe,
+                    RESULT_KEY2 to stepList
+                )
             )
             findNavController().popBackStack()
         }
@@ -199,6 +223,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
     private fun deleteStep(step: Step) {
         val listener = DialogInterface.OnClickListener { dialog, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
+                //TODO выделить функцию удаления и перенести в viewModel
                 stepList.remove(step)
                 stepAdapter.notifyDataSetChanged()
                 changeVisibilityImage()
@@ -220,7 +245,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
         val popupMenu by lazy {
             CustomPopupMenu(context, view).apply {
-            inflate(R.menu.menu_step_options)
+                inflate(R.menu.menu_step_options)
                 this.menu.findItem(R.id.menu_move_down).isEnabled = position < stepList.size - 1
                 this.menu.findItem(R.id.menu_move_up).isEnabled = position > 0
             }
@@ -250,6 +275,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         popupMenu.show()
     }
 
+    // TODO перенести в viewModel
     private fun move(step: Step, moveBy: Int) {
         val oldIndex = stepList.indexOfFirst { it.id == step.id }
         if (oldIndex == -1) return
@@ -259,6 +285,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         stepAdapter.notifyDataSetChanged()
     }
 
+    // TODO перенести в viewModel
     private fun save(step: Step, newName: String) {
         val curIndex = stepList.indexOfFirst { it.id == step.id }
         if (curIndex == -1) return
@@ -285,6 +312,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
 
     companion object {
         const val REQUEST_KEY = "NEW_RECIPE"
-        const val RESULT_KEY = "NEW_RECIPE"
+        const val RESULT_KEY1 = "NEW_RECIPE"
+        const val RESULT_KEY2 = "NEW_STEPS"
     }
 }

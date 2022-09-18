@@ -9,6 +9,8 @@ import android.widget.BaseAdapter
 import androidx.core.view.isInvisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import ru.shvets.myapplication.R
 import ru.shvets.myapplication.adapter.StepAdapter
 import ru.shvets.myapplication.databinding.FragmentTabDetailsBinding

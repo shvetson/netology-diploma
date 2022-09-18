@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import ru.shvets.myapplication.App
 import ru.shvets.myapplication.model.Recipe
 import ru.shvets.myapplication.model.RecipeCategory
+import ru.shvets.myapplication.model.Step
 import ru.shvets.myapplication.utils.Constants
 
 class MainViewModel(
@@ -17,6 +18,8 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
     private val recipeRepository = (application.applicationContext as App).recipeRepository
+    private val stepRepository = (application.applicationContext as App).stepRepository
+
 
     val data get() = recipeRepository.getAll
 
@@ -40,10 +43,8 @@ class MainViewModel(
         return recipeRepository.search(searchQuery)
     }
 
-    fun save(recipe: Recipe) {
-        viewModelScope.launch(Dispatchers.IO) {
-            recipeRepository.save(recipe)
-        }
+    fun save(recipe: Recipe):Long {
+           return recipeRepository.save(recipe)
     }
 
     fun delete(recipe: RecipeCategory) {
@@ -70,7 +71,19 @@ class MainViewModel(
         Log.d(Constants.TAG, "$recipeStart.toString()")
     }
 
-    fun updateRecipe(id: Long, name: String, author: String, categoryId: Long, sortId: Long) {
-        recipeRepository.updateRecipe(id, name, author, categoryId, sortId)
+    fun updateRecipe(id: Long, name: String, author: String, categoryId: Long, sortId: Long, preparation: Int, total: Int, portion: Int, ingredients: String) {
+        recipeRepository.updateRecipe(id, name, author, categoryId, sortId, preparation, total, portion, ingredients)
+    }
+
+    fun insertAll(list: List<Step>, recipeId: Long) {
+        val updatedList = list.map {step->
+            step.copy(
+                id = step.id,
+                recipeId = recipeId,
+                orderId = list.indexOf(step).toLong() + 1
+            )
+        }
+        stepRepository.deleteAll(recipeId)
+        stepRepository.insertAll(updatedList)
     }
 }

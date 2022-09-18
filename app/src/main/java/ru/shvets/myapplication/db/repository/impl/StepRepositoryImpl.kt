@@ -18,6 +18,12 @@ class StepRepositoryImpl (
             }
         }
 
+    override fun getAllSteps(id: Long): List<Step> =
+        dao.getAllSteps(recipeId = id).map { entity ->
+            entity.toStepFromEntity()
+        }
+
+
     override fun insertAll(list: List<Step>) {
         list.map{step->
             dao.insert(StepEntity.toEntityFromStep(step))

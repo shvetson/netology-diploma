@@ -3,6 +3,7 @@ package ru.shvets.myapplication.ui.feed
 import android.graphics.Canvas
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
@@ -28,8 +29,10 @@ import ru.shvets.myapplication.adapter.RecipeAdapter
 import ru.shvets.myapplication.databinding.FragmentFeedBinding
 import ru.shvets.myapplication.model.Recipe
 import ru.shvets.myapplication.model.RecipeCategory
+import ru.shvets.myapplication.model.Step
 import ru.shvets.myapplication.ui.MainViewModel
 import ru.shvets.myapplication.ui.recipe.RecipeFragment
+import ru.shvets.myapplication.utils.Constants
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
     private lateinit var binding: FragmentFeedBinding
@@ -53,9 +56,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         setFragmentResultListener(requestKey = RecipeFragment.REQUEST_KEY) { requestKey, bundle ->
             if (requestKey != RecipeFragment.REQUEST_KEY) return@setFragmentResultListener
-            val newRecipe = bundle.getParcelable<Recipe>(RecipeFragment.RESULT_KEY)
+            val newRecipe = bundle.getParcelable<Recipe>(RecipeFragment.RESULT_KEY1)
                 ?: return@setFragmentResultListener
-            mainViewModel.save(newRecipe)
+            val newSteps = bundle.getParcelableArrayList<Step>(RecipeFragment.RESULT_KEY2)
+                ?: return@setFragmentResultListener
+
+            val recipeId: Long = mainViewModel.save(newRecipe)
+            mainViewModel.insertAll(list = newSteps, recipeId = recipeId)
         }
     }
 
@@ -79,7 +86,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             if (list.isEmpty()) {
                 binding.imageViewEmpty.visibility = View.VISIBLE
             }
-            val title = getString(R.string.app_name) + ", " + if (list.isNotEmpty()) list.size.toString()  else ""
+            val title =
+                getString(R.string.app_name) + ", " + if (list.isNotEmpty()) list.size.toString() else ""
             (activity as AppCompatActivity).supportActionBar?.title = title
         }
 
@@ -103,7 +111,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 val item: MenuItem = menu.findItem(R.id.action_search)
-                item.isVisible = true
+                item.isEnabled = true
                 val searchView = item.actionView as SearchView
                 searchView.inputType = InputType.TYPE_CLASS_TEXT
 
@@ -124,21 +132,20 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
                     private fun searchDatabase(query: String) {
                         val searchQuery = "%$query%"
-                        mainViewModel.search(searchQuery).observe(viewLifecycleOwner) {list->
+                        mainViewModel.search(searchQuery).observe(requireActivity()) { list ->
                             list.let {
                                 recipeAdapter.differ.submitList(it)
                             }
                         }
                     }
                 })
-
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return false
             }
-    }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-}
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
 
     inner class ItemMoveCallback : ItemTouchHelper.Callback() {
 

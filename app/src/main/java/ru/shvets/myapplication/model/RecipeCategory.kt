@@ -9,5 +9,9 @@ data class RecipeCategory(
     val name: String,
     val author: String,
     val category: String,
-    val isLiked: Boolean
+    val isLiked: Boolean,
+    val preparation: Int,
+    val total: Int,
+    val portion: Int,
+    val ingredients: String
 ): Parcelable

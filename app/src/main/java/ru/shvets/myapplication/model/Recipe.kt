@@ -12,5 +12,9 @@ data class Recipe(
     val author: String,
     val categoryId: Long,
     val isDefault: Boolean = false,
-    var isLiked: Boolean = false
+    var isLiked: Boolean = false,
+    val preparation: Int = 0,
+    val total: Int = 0,
+    val portion: Int = 0,
+    val ingredients: String
 ) : Parcelable

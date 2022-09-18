@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
@@ -30,27 +31,30 @@
                 android:id="@+id/text_view_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/primaryTextColor"
-                tools:text="Name" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Recipe name" />
 
             <TextView
                 android:id="@+id/text_view_author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/primaryTextColor"
-                tools:text="Author" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Recipe Author" />
 
             <TextView
                 android:id="@+id/text_view_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/primaryTextColor"
                 android:textStyle="bold"
-                tools:text="Category" />
+                tools:text="Recipe category" />
 
         </LinearLayout>
 

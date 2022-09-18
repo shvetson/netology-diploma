@@ -1,7 +1,12 @@
 package ru.shvets.myapplication.ui.recipe_view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import ru.shvets.myapplication.R
 import ru.shvets.myapplication.databinding.FragmentTabRecipeBinding
@@ -23,9 +28,13 @@ class TabRecipeFragment : Fragment(R.layout.fragment_tab_recipe) {
         binding = FragmentTabRecipeBinding.bind(view)
 
         with(binding) {
-            textViewName.setText(recipe?.name)
-            textViewAuthor.setText(recipe?.author)
-            textViewCategory.setText(recipe?.category)
+            textViewName.text = recipe?.name
+            textViewAuthor.text = recipe?.author
+            textViewCategory.text = recipe?.category
+            textViewPreparation.text = recipe?.preparation.toString()
+            textViewTotal.text = recipe?.total.toString()
+            textViewPortion.text = recipe?.portion.toString()
+            textViewIngredient.text = recipe?.ingredients
         }
     }
 

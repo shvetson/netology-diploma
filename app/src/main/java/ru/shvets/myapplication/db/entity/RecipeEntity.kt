@@ -1,6 +1,5 @@
 package ru.shvets.myapplication.db.entity
 
-import androidx.annotation.NonNull
 import androidx.room.*
 import org.jetbrains.annotations.NotNull
 import ru.shvets.myapplication.model.Recipe
@@ -43,7 +42,15 @@ data class RecipeEntity(
     val isDefault: Boolean = false,
     @NotNull
     @ColumnInfo(name = "is_liked")
-    val isLiked: Boolean = false
+    val isLiked: Boolean = false,
+    @ColumnInfo(name = "preparation")
+    val preparation: Int = 0,
+    @ColumnInfo(name = "total")
+    val total: Int = 0,
+    @ColumnInfo(name = "portion")
+    val portion: Int = 0,
+    @ColumnInfo(name = "ingredients")
+    val ingredients: String
 ) {
     fun toRecipeFromEntity(): Recipe = Recipe(
         id = id,
@@ -52,7 +59,11 @@ data class RecipeEntity(
         author = author,
         categoryId = categoryId,
         isDefault = isDefault,
-        isLiked = isLiked
+        isLiked = isLiked,
+        preparation = preparation,
+        total = total,
+        portion = portion,
+        ingredients = ingredients
     )
 
     companion object {
@@ -63,7 +74,11 @@ data class RecipeEntity(
             author = recipe.author,
             categoryId = recipe.categoryId,
             isDefault = recipe.isDefault,
-            isLiked = recipe.isLiked
+            isLiked = recipe.isLiked,
+            preparation = recipe.preparation,
+            total = recipe.total,
+            portion = recipe.portion,
+            ingredients = recipe.ingredients
         )
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c9b8519092f9636ff2d60a4cbb2fd6f0",
+    "identityHash": "22e81389975ad37293bfb00fcbdb926e",
     "entities": [
       {
         "tableName": "categories",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "recipes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sort_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `author` TEXT NOT NULL, `category_id` INTEGER NOT NULL, `is_default` INTEGER NOT NULL, `is_liked` INTEGER NOT NULL, FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sort_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `author` TEXT NOT NULL, `category_id` INTEGER NOT NULL, `is_default` INTEGER NOT NULL, `is_liked` INTEGER NOT NULL, `preparation` INTEGER NOT NULL, `total` INTEGER NOT NULL, `portion` INTEGER NOT NULL, `ingredients` TEXT NOT NULL, FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -86,6 +86,30 @@
             "fieldPath": "isLiked",
             "columnName": "is_liked",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preparation",
+            "columnName": "preparation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "total",
+            "columnName": "total",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "portion",
+            "columnName": "portion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ingredients",
+            "columnName": "ingredients",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -193,7 +217,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c9b8519092f9636ff2d60a4cbb2fd6f0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '22e81389975ad37293bfb00fcbdb926e')"
     ]
   }
 }

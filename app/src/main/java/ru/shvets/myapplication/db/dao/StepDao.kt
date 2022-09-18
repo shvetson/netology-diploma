@@ -10,6 +10,9 @@ interface StepDao  {
     @Query("SELECT * FROM steps WHERE recipe_id = :recipeId ORDER BY order_id ASC")
     fun getAll(recipeId: Long): LiveData<List<StepEntity>>
 
+    @Query("SELECT * FROM steps WHERE recipe_id = :recipeId ORDER BY order_id ASC")
+    fun getAllSteps(recipeId: Long): List<StepEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(step: StepEntity)
 

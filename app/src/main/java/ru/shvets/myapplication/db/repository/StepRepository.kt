@@ -5,6 +5,7 @@ import ru.shvets.myapplication.model.Step
 
 interface StepRepository {
         fun getAll(id: Long): LiveData<List<Step>>
+        fun getAllSteps(id: Long): List<Step>
         fun insertAll(list: List<Step>)
         fun deleteAll(recipeId: Long)
 }

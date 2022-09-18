@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    style="@style/Theme.Card2"
     android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/secondaryLightColor"
     android:layout_margin="4dp"
-    app:contentPadding="8dp"
-    android:orientation="vertical">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:contentPadding="8dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout"
+    <TextView
+        android:id="@+id/item_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground">
-
-        <TextView
-            android:id="@+id/item_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:padding="8dp"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="16sp"
-            tools:text="Item" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:ellipsize="end"
+        android:background="@color/secondaryLightColor"
+        android:textColor="@color/primaryTextColor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="Item" />
 
 </androidx.cardview.widget.CardView>

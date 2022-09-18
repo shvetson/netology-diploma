@@ -23,8 +23,8 @@
             android:layout_weight="0.9"
             android:gravity="center_horizontal"
             android:text="@string/title_recipe"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/primaryTextColor"
-            android:textSize="24sp"
             android:textStyle="bold" />
 
         <ImageView
@@ -54,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1" />
@@ -66,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:hint="@string/hint_author"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_spinner"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,6 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1" />
@@ -90,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:hint="@string/hint_category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,86 +105,174 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:inputType="none"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:maxLines="1"
             android:paddingStart="16dp"
             android:textColor="@color/primaryTextColor" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:hint="@string/label_cooking"
-            android:orientation="vertical"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            app:cardPreventCornerOverlap="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_spinner">
+    <LinearLayout
+        android:id="@+id/linear_layout_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_input_layout_spinner">
 
-            <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_preparation"
+            android:layout_weight="0.4">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_edit_preparation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:imeOptions="actionDone"
+                android:inputType="number" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="0.35"
-                    android:padding="8dp"
-                    android:text="@string/label_cooking"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.35" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="@string/hint_total"
+            android:layout_weight="0.4">
 
-                <ImageView
-                    android:id="@+id/button_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.05"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:backgroundTint="@color/backgroundColor"
-                    android:contentDescription="@string/desc_button_add_cooking"
-                    android:paddingTop="8dp"
-                    android:src="@drawable/ic_add"
-                    app:tint="@color/primaryDarkColor" />
-
-            </LinearLayout>
-
-            <FrameLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_edit_total"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="number" />
 
-                <ListView
-                    android:id="@+id/view_list_steps"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:dividerHeight="2dp"
-                    tools:listitem="@layout/item_step" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageView
-                    android:id="@+id/image_view_empty"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:visibility="invisible"
-                    app:tint="@color/primaryLightColor"
-                    android:src="@drawable/empty_list" />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="@string/hint_portion"
+            android:layout_weight="0.4">
 
-            </FrameLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_edit_portion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/frame_layout_ingredients"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        android:scrollbars="vertical"
+        android:hint="@string/hint_ingredients"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_details">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_edit_ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="5"
+            android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        app:cardPreventCornerOverlap="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frame_layout_ingredients">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0.35"
+                android:padding="8dp"
+                android:text="@string/title_directions"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35" />
+
+            <ImageView
+                android:id="@+id/button_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:backgroundTint="@color/backgroundColor"
+                android:contentDescription="@string/desc_button_add_cooking"
+                android:paddingTop="8dp"
+                android:src="@drawable/ic_add"
+                app:tint="@color/primaryDarkColor" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/view_list_steps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="2dp"
+                tools:listitem="@layout/item_step" />
+
+            <ImageView
+                android:id="@+id/image_view_empty"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/empty_list"
+                android:visibility="invisible"
+                app:tint="@color/primaryLightColor" />
+
+        </FrameLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_save"

@@ -15,8 +15,7 @@
         android:gravity="left"
         android:text="@string/title_list"
         app:textAllCaps="true"
-        android:textStyle="bold"
-        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_feed"
-        tools:listitem="@layout/item_recipe"
-        android:visibility="visible"/>
+        tools:listitem="@layout/item_recipe" />
 
     <ImageView
         android:id="@+id/image_view_empty"

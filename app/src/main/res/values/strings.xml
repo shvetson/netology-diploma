@@ -16,6 +16,7 @@
     <string name="title_favorites_list">Favorites list</string>
     <string name="title_recipe">Recipe</string>
     <string name="title_details">Details</string>
+    <string name="title_directions">Directions</string>
     <string name="title_add">New recipe</string>
     <string name="title_edit_recipe">Edit recipe</string>
     <string name="title_edit_step">Edit step</string>
@@ -24,6 +25,17 @@
     <string name="title_categories">Categories</string>
     <string name="title_message_question">Question</string>
     <string name="title_message_enter_step">Enter step</string>
+
+    <!-- Screen labels -->
+    <string name="label_author">Author</string>
+    <string name="label_category">Category</string>
+    <string name="label_cooking">Cooking process</string>
+    <string name="label_ingredients">Ingredients</string>
+    <string name="label_preparation">Preparation</string>
+    <string name="label_total">Total</string>
+    <string name="label_time_min">min</string>
+    <string name="label_portion">Portions</string>
+    <string name="label_persons">ppl</string>
 
     <!-- Button's label -->
     <string name="btn_label_update">Update</string>
@@ -47,7 +59,6 @@
     <string name="step_options_menu_action_move_up">MoveUp</string>
     <string name="step_options_menu_action_move_down">MoveDown</string>
 
-
     <!-- PagerView -->
     <string name="pagers_item_list">Recipes list</string>
     <string name="pagers_item_favorites">Favorites</string>
@@ -58,17 +69,18 @@
     <string name="desc_button_add_cooking">Button Add</string>
     <string name="desc_button_delete">Button Delete</string>
 
-
     <!-- Hints -->
     <string name="hint_recipe">Recipe</string>
     <string name="hint_author">Author</string>
     <string name="hint_category">Category</string>
     <string name="hint_new_step">New step</string>
+    <string name="hint_preparation">Preparation</string>
+    <string name="hint_total">Total</string>
+    <string name="hint_portion">Portions</string>
+    <string name="hint_ingredients">Ingredients</string>
 
-    <!-- Labels -->
-    <string name="label_cooking">Cooking process</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Default row in the Steps table -->
+    <string name="default_row_empty_list">Enter steps cooking</string>
 
 
 </resources>

@@ -12,7 +12,12 @@ fun RecipeEntity.toModel() = Recipe(
     author = author,
     categoryId = categoryId,
     isDefault = isDefault,
-    isLiked = isLiked)
+    isLiked = isLiked,
+    preparation = preparation,
+    total = total,
+    portion = portion,
+    ingredients = ingredients
+)
 
 fun Recipe.toEntity() = RecipeEntity(
     id = id,
@@ -21,4 +26,9 @@ fun Recipe.toEntity() = RecipeEntity(
     author = author,
     categoryId = categoryId,
     isDefault = isDefault,
-    isLiked = isLiked)
+    isLiked = isLiked,
+    preparation = preparation,
+    total = total,
+    portion = portion,
+    ingredients = ingredients
+)

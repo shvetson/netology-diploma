@@ -1,6 +1,5 @@
 package ru.shvets.myapplication.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +29,6 @@ class RecipeAdapter(
             return oldItem == newItem
         }
 
-        // Для исключения блика элемента при нажатии на checkButton liked (в частности)
         override fun getChangePayload(oldItem: RecipeCategory, newItem: RecipeCategory): Any? {
             if (oldItem.isLiked != newItem.isLiked) return false
             return super.getChangePayload(oldItem, newItem)
@@ -47,10 +45,8 @@ class RecipeAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemRecipeBinding.inflate(inflater, parent, false)
 
-//        if (RecipeViewHolder(binding).absoluteAdapterPosition != RecyclerView.NO_POSITION) {
-            binding.buttonLiked.setOnClickListener(this)
-            binding.root.setOnClickListener(this)
-//        }
+        binding.buttonLiked.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
 
         return RecipeViewHolder(binding)
     }

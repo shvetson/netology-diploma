@@ -27,14 +27,14 @@
 
     <!-- Card -->
     <style name="Theme.Card" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="cardElevation">6dp</item>
+        <item name="cardElevation">8dp</item>
         <item name="cardBackgroundColor">@color/primaryColor</item>
         <item name="cardCornerRadius">8dp</item>
     </style>
 
     <!-- Card2 -->
     <style name="Theme.Card2" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="cardElevation">6dp</item>
+        <item name="cardElevation">8dp</item>
         <item name="cardBackgroundColor">@color/secondaryLightColor</item>
         <item name="cardCornerRadius">8dp</item>
     </style>
