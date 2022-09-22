@@ -3,7 +3,6 @@ package ru.shvets.myapplication.ui.feed
 import android.graphics.Canvas
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
@@ -32,7 +31,6 @@ import ru.shvets.myapplication.model.RecipeCategory
 import ru.shvets.myapplication.model.Step
 import ru.shvets.myapplication.ui.MainViewModel
 import ru.shvets.myapplication.ui.recipe.RecipeFragment
-import ru.shvets.myapplication.utils.Constants
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
     private lateinit var binding: FragmentFeedBinding
@@ -112,6 +110,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 val item: MenuItem = menu.findItem(R.id.action_search)
                 item.isEnabled = true
+                item.isVisible = true
                 val searchView = item.actionView as SearchView
                 searchView.inputType = InputType.TYPE_CLASS_TEXT
 
@@ -132,11 +131,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
                     private fun searchDatabase(query: String) {
                         val searchQuery = "%$query%"
-                        mainViewModel.search(searchQuery).observe(requireActivity()) { list ->
-                            list.let {
-                                recipeAdapter.differ.submitList(it)
-                            }
-                        }
+                        val list = mainViewModel.search(searchQuery)
+                        recipeAdapter.differ.submitList(list)
                     }
                 })
             }

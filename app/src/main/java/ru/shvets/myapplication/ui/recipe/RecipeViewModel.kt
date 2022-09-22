@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.shvets.myapplication.App
 import ru.shvets.myapplication.model.Step
+import ru.shvets.myapplication.utils.Constants
 import java.util.*
 
 class RecipeViewModel(
@@ -26,15 +27,36 @@ class RecipeViewModel(
         return _steps
     }
 
-    fun getMaxSortId(): Int{
+    fun getMaxSortId(): Int {
         return recipeRepository.getMaxSortId()
     }
 
-//    fun move(list: ArrayList<Step>, step: Step, moveBy: Int) {
-//        val oldIndex = list.indexOfFirst { it.id == step.id }
-//        if (oldIndex == -1) return
-//        val newIndex = oldIndex + moveBy
-//        if (newIndex < 0 || newIndex >= list.size) return
-//        Collections.swap(list, oldIndex, newIndex)
-//    }
+    fun move(list: ArrayList<Step>, step: Step, moveBy: Int) {
+        val oldIndex = list.indexOfFirst { it.orderId == step.orderId }
+        if (oldIndex == -1) return
+        val newIndex = oldIndex + moveBy
+        if (newIndex < 0 || newIndex >= list.size) return
+        Collections.swap(list, oldIndex, newIndex)
+    }
+
+    fun delete(list: ArrayList<Step>, step: Step) {
+        val position = list.indexOfFirst { it.orderId == step.orderId }
+        list.removeAt(position)
+    }
+
+    fun update(list: ArrayList<Step>, step: Step, newName: String) {
+        val curIndex = list.indexOfFirst { it.orderId == step.orderId }
+        if (curIndex == -1) return
+        val updatedStep = step.copy(name = newName)
+        list[curIndex] = updatedStep
+    }
+
+    fun add(list: ArrayList<Step>, name: String) {
+        val recipe = Step(
+            id = Constants.NEW_STEP_ID,
+            name = name,
+            recipeId = Constants.NEW_RECIPE_ID,
+            orderId = (list.size + 1).toLong())
+        list.add(recipe)
+    }
 }

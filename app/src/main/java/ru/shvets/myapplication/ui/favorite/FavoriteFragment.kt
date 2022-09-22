@@ -70,7 +70,7 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 val item: MenuItem = menu.findItem(R.id.action_search)
-                item.isEnabled = false
+                item.isVisible = false
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {

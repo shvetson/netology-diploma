@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Рецепты</string>
+
+    <!-- Messages -->
+    <string name="search_message">Введите текст для поиска</string>
+    <string name="question_delete">Вы действительно хотите удалить?</string>
+    <string name="error_empty">Не введено значение</string>
+    <string name="recipe_is_deleted"> удалено</string>
+
+    <!-- Swipe -->
+    <string name="swipe_edit">Редактирование</string>
+    <string name="swipe_delete">Удаление</string>
+
+    <!-- Screen's title -->
+    <string name="title_list">Список рецептов</string>
+    <string name="title_favorites_list">Любимые рецепты</string>
+    <string name="title_recipe">Рецепт</string>
+    <string name="title_details">Описание</string>
+    <string name="title_directions">Технология</string>
+    <string name="title_add">Новый рецепт</string>
+    <string name="title_edit_recipe">Редактирование рецепта</string>
+    <string name="title_edit_step">Редактирование технологии</string>
+    <string name="title_favorite">Любимые</string>
+    <string name="title_filter">Фильтр</string>
+    <string name="title_categories">Категории</string>
+    <string name="title_message_question">Вопрос</string>
+    <string name="title_message_enter_step">Ввести шаг</string>
+
+    <!-- Screen labels -->
+    <string name="label_author">Автор</string>
+    <string name="label_category">Категория</string>
+    <string name="label_cooking">Процесс</string>
+    <string name="label_ingredients">Ингридиенты</string>
+    <string name="label_preparation">Подготовка</string>
+    <string name="label_total">Общее</string>
+    <string name="label_time_min">мин</string>
+    <string name="label_portion">Порции</string>
+    <string name="label_persons">чел</string>
+
+    <!-- Button's label -->
+    <string name="btn_label_update">Обновление</string>
+    <string name="btn_label_save">Сохранение</string>
+    <string name="btn_label_delete">Удаление</string>
+    <string name="btn_label_cancel">Отмена</string>
+    <string name="btn_label_add">Добавление</string>
+    <string name="btn_label_confirm">Подтверждение</string>
+
+    <!-- Toolbar menu -->
+    <string name="toolbar_menu_action_search">Поиск</string>
+    <string name="toolbar_menu_action_filter">Фильтр</string>
+
+    <!-- Bottom menu -->
+    <string name="bottom_menu_action_recipes">Рецепты</string>
+    <string name="bottom_menu_action_favorite">Любимые</string>
+
+    <!-- Options menu -->
+    <string name="step_options_menu_action_delete">Удаление</string>
+    <string name="step_options_menu_action_edit">Редактирование</string>
+    <string name="step_options_menu_action_move_up">Вверх</string>
+    <string name="step_options_menu_action_move_down">Вниз</string>
+
+    <!-- PagerView -->
+    <string name="pagers_item_list">Рецепты</string>
+    <string name="pagers_item_favorites">Любимые</string>
+
+    <string name="desc_splash_screen">Заставка</string>
+    <string name="desc_image_favorite">Выбор</string>
+    <string name="desc_button_fab">FAB</string>
+    <string name="desc_button_add_cooking">Кнопка Добавить</string>
+    <string name="desc_button_delete">Кнопка Удаление</string>
+
+    <!-- Hints -->
+    <string name="hint_recipe">Рецепт</string>
+    <string name="hint_author">Автор</string>
+    <string name="hint_category">Категория</string>
+    <string name="hint_new_step">Новый шаг процесса</string>
+    <string name="hint_preparation">Подготовка</string>
+    <string name="hint_total">Общее</string>
+    <string name="hint_portion">Порции</string>
+    <string name="hint_ingredients">Ингридиенты</string>
+
+    <!-- Default row in the Steps table -->
+    <string name="default_row_empty_list">Введите описание процесса</string>
+</resources>

@@ -54,7 +54,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         actionBar.title =
             if (currentRecipe == null) getString(R.string.title_add) else getString(R.string.title_edit_recipe)
 
-//        requestFocusAndShowSoftInput(binding.textEditName)
         binding.textEditName.requestFocus()
 
         val spinnerCategoryAdapter = ArrayAdapter(
@@ -122,63 +121,86 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             }
         }
 
-        binding.buttonSave.setOnClickListener {
-            if (binding.textEditName.text?.isBlank() == true) {
-                binding.textEditName.error = getString(R.string.error_empty)
-            } else {
-
-                if (binding.spinnerCategory.text.isBlank()) {
-                    binding.spinnerCategory.error = getString(R.string.error_empty)
+        with(binding) {
+            buttonSave.setOnClickListener {
+                if (textEditName.text?.isBlank() == true) {
+                    textEditName.error = getString(R.string.error_empty)
                 } else {
-                    val id = currentRecipe?.id ?: Constants.NEW_RECIPE_ID
 
-                    val newRecipe = Recipe(
-                        id = id,
-                        sortId = (recipeViewModel.getMaxSortId() + 1).toLong(),
-                        name = binding.textEditName.text.toString(),
-                        author = binding.textEditAuthor.text.toString(),
-                        categoryId = currentCategory.id,
-                        preparation = if (binding.textEditPreparation.text.toString()
-                                .isNotBlank()
-                        ) binding.textEditPreparation.text.toString().toInt() else 0,
-                        total = if (binding.textEditTotal.text.toString()
-                                .isNotBlank()
-                        ) binding.textEditTotal.text.toString().toInt() else 0,
-                        portion = if (binding.textEditPortion.text.toString()
-                                .isNotBlank()
-                        ) binding.textEditPortion.text.toString().toInt() else 0,
-                        ingredients = binding.textEditIngredients.text.toString()
-                    )
+                    if (spinnerCategory.text.isBlank()) {
+                        spinnerCategory.error = getString(R.string.error_empty)
+                    } else {
+                        val id = currentRecipe?.id ?: Constants.NEW_RECIPE_ID
 
-                    if (stepList.size == 0) {
-                        stepList.add(
-                            Step(
-                                id = Constants.NEW_STEP_ID,
-                                name = getString(R.string.default_row_empty_list),
-                                recipeId = 0,
-                                orderId = 0
+                        val newRecipe = Recipe(
+                            id = id,
+                            sortId = (recipeViewModel.getMaxSortId() + 1).toLong(),
+                            name = textEditName.text.toString(),
+                            author = textEditAuthor.text.toString(),
+                            categoryId = currentCategory.id,
+                            preparation = if (textEditPreparation.text.toString().isNotBlank()) textEditPreparation.text.toString().toInt() else 0,
+                            total = if (textEditTotal.text.toString().isNotBlank()) textEditTotal.text.toString().toInt() else 0,
+                            portion = if (textEditPortion.text.toString().isNotBlank()) textEditPortion.text.toString().toInt() else 0,
+                            ingredients = textEditIngredients.text.toString()
+                        )
+
+                        if (stepList.size == 0) {
+                            stepList.add(
+                                Step(
+                                    id = Constants.NEW_STEP_ID,
+                                    name = getString(R.string.default_row_empty_list),
+                                    recipeId = 0,
+                                    orderId = 0
+                                )
+                            )
+                        }
+                        setFragmentResult(
+                            requestKey = REQUEST_KEY,
+                            bundleOf(
+                                RESULT_KEY1 to newRecipe,
+                                RESULT_KEY2 to stepList
                             )
                         )
+                        findNavController().popBackStack()
                     }
-                    setFragmentResult(
-                        requestKey = REQUEST_KEY,
-                        bundleOf(
-                            RESULT_KEY1 to newRecipe,
-                            RESULT_KEY2 to stepList
-                        )
-                    )
-                    findNavController().popBackStack()
                 }
             }
         }
     }
 
-    private fun changeVisibilityImage() {
-        if (stepList.size == 0) {
-            binding.imageViewEmpty.visibility = View.VISIBLE
-        } else {
-            binding.imageViewEmpty.visibility = View.INVISIBLE
+    private fun showPopupMenu(view: View, step: Step, position: Int) {
+        val context: Context = view.context
+
+        val popupMenu by lazy {
+            CustomPopupMenu(context, view).apply {
+                inflate(R.menu.menu_step_options)
+                this.menu.findItem(R.id.menu_move_down).isEnabled = position < stepList.size - 1
+                this.menu.findItem(R.id.menu_move_up).isEnabled = position > 0
+            }
         }
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_edit -> {
+                    editStep(step)
+                    true
+                }
+                R.id.menu_delete -> {
+                    deleteStep(stepList, step)
+                    true
+                }
+                R.id.menu_move_up -> {
+                    moveStep(stepList, step, -1)
+                    true
+                }
+                R.id.menu_move_down -> {
+                    moveStep(stepList, step, 1)
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     private fun addStep() {
@@ -189,14 +211,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             .setPositiveButton(getString(R.string.btn_label_add)) { dialog, which ->
                 val name = dialogBinding.editTextAddStepProcess.text.toString()
                 if (name.isNotBlank()) {
-                    stepList.add(
-                        Step(
-                            id = Constants.NEW_STEP_ID,
-                            name = name,
-                            recipeId = id.toLong(),
-                            orderId = stepList.size.toLong()
-                        )
-                    )
+                    recipeViewModel.add(stepList, name)
                     stepAdapter.notifyDataSetChanged()
                     changeVisibilityImage()
                 }
@@ -222,7 +237,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                     dialogBinding.editTextAddStepProcess.error = getString(R.string.error_empty)
                     return@setOnClickListener
                 }
-                save(step, enterText)
+                updateStep(stepList, step, enterText)
                 stepAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -230,11 +245,10 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         dialog.show()
     }
 
-    private fun deleteStep(step: Step) {
+    private fun deleteStep(list: ArrayList<Step>, step: Step) {
         val listener = DialogInterface.OnClickListener { dialog, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                //TODO выделить функцию удаления и перенести в viewModel
-                stepList.remove(step)
+                recipeViewModel.delete(list, step)
                 stepAdapter.notifyDataSetChanged()
                 changeVisibilityImage()
             }
@@ -246,59 +260,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             .setPositiveButton(getString(R.string.btn_label_delete), listener)
             .setNegativeButton(R.string.btn_label_cancel, listener)
             .create()
-
         dialog.show()
     }
 
-    private fun showPopupMenu(view: View, step: Step, position: Int) {
-        val context: Context = view.context
-
-        val popupMenu by lazy {
-            CustomPopupMenu(context, view).apply {
-                inflate(R.menu.menu_step_options)
-                this.menu.findItem(R.id.menu_move_down).isEnabled = position < stepList.size - 1
-                this.menu.findItem(R.id.menu_move_up).isEnabled = position > 0
-            }
-        }
-
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_edit -> {
-                    editStep(step)
-                    true
-                }
-                R.id.menu_delete -> {
-                    deleteStep(step)
-                    true
-                }
-                R.id.menu_move_up -> {
-                    move(step, -1)
-                    true
-                }
-                R.id.menu_move_down -> {
-                    move(step, 1)
-                    true
-                }
-                else -> false
-            }
-        }
-        popupMenu.show()
-    }
-
-    private fun move(step: Step, moveBy: Int) {
-        val oldIndex = stepList.indexOfFirst { it.id == step.id }
-        if (oldIndex == -1) return
-        val newIndex = oldIndex + moveBy
-        if (newIndex < 0 || newIndex >= stepList.size) return
-        Collections.swap(stepList, oldIndex, newIndex)
+    private fun moveStep(list: ArrayList<Step>, step: Step, moveBy: Int) {
+        recipeViewModel.move(list, step, moveBy)
         stepAdapter.notifyDataSetChanged()
     }
 
-    private fun save(step: Step, newName: String) {
-        val curIndex = stepList.indexOfFirst { it.id == step.id }
-        if (curIndex == -1) return
-        val updatedStep = step.copy(name = newName)
-        stepList[curIndex] = updatedStep
+    private fun updateStep(list: ArrayList<Step>, step: Step, newName: String) {
+        recipeViewModel.update(list, step, newName)
         stepAdapter.notifyDataSetChanged()
     }
 
@@ -310,12 +281,12 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         setImageResource(icon)
     }
 
-    private fun requestFocusAndShowSoftInput(view: View) {
-        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        view.postDelayed(Runnable {
-            view.requestFocus()
-            imm!!.showSoftInput(view, 0)
-        }, 100)
+    private fun changeVisibilityImage() {
+        if (stepList.size == 0) {
+            binding.imageViewEmpty.visibility = View.VISIBLE
+        } else {
+            binding.imageViewEmpty.visibility = View.INVISIBLE
+        }
     }
 
     companion object {

@@ -2,6 +2,7 @@ package ru.shvets.myapplication.db.repository.impl
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import ru.shvets.myapplication.db.dao.RecipeDao
 import ru.shvets.myapplication.db.entity.RecipeEntity
 import ru.shvets.myapplication.db.repository.RecipeRepository
@@ -13,7 +14,7 @@ class RecipeRepositoryImpl(
     private val recipeDao: RecipeDao
 ) : RecipeRepository {
 
-    override val getAll: List<Recipe> = recipeDao.getAll().map { entity->
+    override val getAll: List<Recipe> = recipeDao.getAll().map { entity ->
         entity.toRecipeFromEntity()
     }
 
@@ -61,21 +62,19 @@ class RecipeRepositoryImpl(
             }
         }
 
-    override fun search(searchQuery: String): LiveData<List<RecipeCategory>> {
-        return Transformations.map(recipeDao.search(searchQuery)) { entities ->
-            entities.map {
-                RecipeCategory(
-                    id = it.id,
-                    name = it.name,
-                    author = it.author,
-                    isLiked = it.isLiked,
-                    category = it.category,
-                    preparation = it.preparation,
-                    total = it.total,
-                    portion = it.portion,
-                    ingredients = it.ingredients
-                )
-            }
+    override fun search(searchQuery: String): List<RecipeCategory> {
+        return recipeDao.search(searchQuery).map { it ->
+            RecipeCategory(
+                id = it.id,
+                name = it.name,
+                author = it.author,
+                isLiked = it.isLiked,
+                category = it.category,
+                preparation = it.preparation,
+                total = it.total,
+                portion = it.portion,
+                ingredients = it.ingredients
+            )
         }
     }
 
@@ -87,7 +86,7 @@ class RecipeRepositoryImpl(
         recipeDao.delete(id)
     }
 
-    override fun insert(recipe: Recipe):Long {
+    override fun insert(recipe: Recipe): Long {
         return recipeDao.insert(RecipeEntity.toEntityFromRecipe(recipe))
     }
 
@@ -95,7 +94,17 @@ class RecipeRepositoryImpl(
         if (recipe.id == Constants.NEW_RECIPE_ID) {
             return recipeDao.insert(RecipeEntity.toEntityFromRecipe(recipe))
         } else {
-            recipeDao.updateRecipe(recipe.id, recipe.name, recipe.author, recipe.categoryId, recipe.id, recipe.preparation, recipe.total, recipe.portion, recipe.ingredients)
+            recipeDao.updateRecipe(
+                recipe.id,
+                recipe.name,
+                recipe.author,
+                recipe.categoryId,
+                recipe.id,
+                recipe.preparation,
+                recipe.total,
+                recipe.portion,
+                recipe.ingredients
+            )
             return recipe.id
         }
     }
@@ -106,13 +115,5 @@ class RecipeRepositoryImpl(
 
     override fun updateSortId(sortId: Long, id: Long) {
         recipeDao.updateSortId(sortId, id)
-    }
-
-    override fun remove(recipe: Recipe, onSuccess: () -> Unit) {
-        TODO("Not yet implemented")
-    }
-
-    override fun updateRecipe(id: Long, name: String, author: String, categoryId: Long, sortId: Long, preparation: Int, total: Int, portion: Int, ingredients: String) {
-        recipeDao.updateRecipe(id, name, author, categoryId, sortId, preparation, total, portion, ingredients)
     }
 }

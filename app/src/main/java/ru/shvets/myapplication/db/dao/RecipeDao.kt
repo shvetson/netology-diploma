@@ -24,7 +24,7 @@ interface RecipeDao {
     fun getFavorites(): LiveData<List<RecipeCategory>>
 
     @Query("SELECT a.id as id, a.name as name, a.author as author, a.is_liked as isLiked, a.preparation as preparation, a.total as total, a.portion as portion, a.ingredients as ingredients, b.name as category FROM recipes a INNER JOIN categories b ON a.category_id = b.id AND b.is_checked = 1  WHERE a.name LIKE :searchQuery ORDER BY a.sort_id ASC")
-    fun search(searchQuery: String): LiveData<List<RecipeCategory>>
+    fun search(searchQuery: String): List<RecipeCategory>
 
     @Query("SELECT MAX(sort_id) FROM recipes")
     fun getMaxSortId(): Int

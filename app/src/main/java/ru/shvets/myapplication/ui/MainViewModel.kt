@@ -27,10 +27,6 @@ class MainViewModel(
         return recipeRepository.getAllRecipes()
     }
 
-    fun loadRecipes(): List<Recipe> {
-        return data
-    }
-
     fun getRecipe(id: Long) : Recipe {
         return recipeRepository.getById(id)
     }
@@ -39,7 +35,7 @@ class MainViewModel(
         return recipeRepository.getFavorites()
     }
 
-    fun search(searchQuery: String): LiveData<List<RecipeCategory>> {
+    fun search(searchQuery: String): List<RecipeCategory> {
         return recipeRepository.search(searchQuery)
     }
 
@@ -61,18 +57,9 @@ class MainViewModel(
         val startSortId = recipeStart.sortId
         val endSortId = recipeEnd.sortId
 
-        Log.d(Constants.TAG, "$startSortId -> $endSortId")
-
         recipeRepository.updateSortId(sortId = 99999, id = recipeStart.id)
-        Log.d(Constants.TAG, "$recipeStart.toString()")
         recipeRepository.updateSortId(sortId = startSortId, id = recipeEnd.id)
-        Log.d(Constants.TAG, "$recipeEnd.toString()")
         recipeRepository.updateSortId(sortId = endSortId, id = recipeStart.id)
-        Log.d(Constants.TAG, "$recipeStart.toString()")
-    }
-
-    fun updateRecipe(id: Long, name: String, author: String, categoryId: Long, sortId: Long, preparation: Int, total: Int, portion: Int, ingredients: String) {
-        recipeRepository.updateRecipe(id, name, author, categoryId, sortId, preparation, total, portion, ingredients)
     }
 
     fun insertAll(list: List<Step>, recipeId: Long) {
